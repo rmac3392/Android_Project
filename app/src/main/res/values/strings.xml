@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Macawili, Ryan James</string>
+    
+    <string-array name="courses">
+        <item>BSCS</item>
+        <item>BSIT</item>
+        <item>BSED</item>
+        <item>BSCPE</item>
+        <item>BSCE</item>
+    </string-array>
+</resources>
