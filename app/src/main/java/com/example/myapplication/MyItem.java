@@ -9,7 +9,7 @@ public class MyItem implements Serializable {
     private int img;
     private String imgname;
     private Uri uriImage;
-
+    private int id;
     private String courseName;
 
     public MyItem(int img, String imgname) {
@@ -22,6 +22,8 @@ public class MyItem implements Serializable {
         this.uriImage = uriImage;
         this.courseName = courseName;
     }
+
+
 
     public String getCourseName() {
         return courseName;

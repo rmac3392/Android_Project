@@ -48,7 +48,9 @@ public class ItemAdapter extends BaseAdapter {
             handler.course = convertView.findViewById(R.id.textView3);
             convertView.setTag(handler);
         }
-            handler =(ItemHandler)convertView.getTag();
+        else {
+            handler = (ItemHandler) convertView.getTag();
+        }
             handler.iv.setImageURI(list.get(position).getUriImage());
             handler.name.setText(list.get(position).getImgname());
             handler.course.setText(list.get(position).getCourseName());

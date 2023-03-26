@@ -1,14 +1,20 @@
 package com.example.myapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 
 import androidx.annotation.Nullable;
 
+import java.net.URI;
+import java.util.ArrayList;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "student_db";
-    public static final String TABLE_NAME = "student_table";
+    public static final String databasename = "studentdb";
+    public static final String tblstudent = "student";
     public static final String  COL1= "ID";
     public static final String  COL2= "student_name";
     public static final String  COL3 = "student_image";
@@ -16,19 +22,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public DatabaseHelper( Context context) {
-        super(context,DATABASE_NAME,null,1);
-        SQLiteDatabase db = this.getWritableDatabase();
+        super(context,databasename,null,1);
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(" CREATE TABLE "+TABLE_NAME+"(ID INTEGER PRIMARY KEY AUTOINCREMENT,student_name TEXT,student_image TEXT)");
-
+        String sql = "CREATE TABLE "+tblstudent+"(id integer primary key autoincrement,studentimage varchar(50),studentname varchar(50),studentcourse varchar(25))";
+        db.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
-        onCreate(db);
+       // db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+       // onCreate(db);
+    }
+
+    public long addStudent(MyItem student){
+        long ok = 1;
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("studentimage",student.getUriImage().toString());
+            cv.put("studentname",student.getImgname());
+            cv.put("studentcourse",student.getCourseName());
+            db.insert(tblstudent,null,cv);
+            db.close();
+            return ok;
+    }
+
+    public ArrayList<MyItem> getAllStudent(){
+        ArrayList<MyItem> list = new ArrayList<MyItem>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tblstudent,null,null,null,null,null,"studentname");
+        cursor.moveToFirst();
+         while(!cursor.isAfterLast()){
+             // not sure 26:00
+             int id =  cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+             String uriimage = cursor.getString(cursor.getColumnIndexOrThrow("studentimage"));
+             String name = cursor.getString(cursor.getColumnIndexOrThrow("studentname"));
+             String course = cursor.getString(cursor.getColumnIndexOrThrow("studentcourse"));
+             list.add(new MyItem(Uri.parse(uriimage),name,course));
+             db.close();
+         }
+        return list;
     }
 }

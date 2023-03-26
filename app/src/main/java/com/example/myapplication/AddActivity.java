@@ -32,12 +32,16 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
     private String selected_course;
+
+    DatabaseHelper db;
     // end here
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+
+        db = new DatabaseHelper(this);
 
         txtNewString = findViewById(R.id.newString);
         button = findViewById(R.id.button);
@@ -121,10 +125,16 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                     String data = txtNewString.getText().toString();
                     Intent intent = new Intent();
                     intent.putExtra("textdata", data);
-                    intent.putExtra("imgdata", uriImg.toString());
+                    intent.putExtra("imgdata", uriImg);
                     intent.putExtra("course", selected_course);
                     intent.getData();
                     setResult(Activity.RESULT_OK, intent);
+                    String message = "Error adding student";
+                    long result = db.addStudent(new MyItem(uriImg,data,selected_course));
+                    if(result>0){
+                        message = "New Student added!";
+                    }
+                    Toast.makeText(this,message,Toast.LENGTH_LONG).show();
                     finish();
                 }break;
             case R.id.button3:
@@ -137,7 +147,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        selected_course=course_list.getItemAtPosition(i).toString();
+        selected_course = course_list.getItemAtPosition(i).toString();
     }
 
     @Override

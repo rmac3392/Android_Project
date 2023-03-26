@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseHelper myDb;
+    DatabaseHelper db;
     ListView lv;
     EditText txtSearch;
     ArrayList<MyItem> list = new ArrayList<MyItem>();
@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myDb = new DatabaseHelper(this);
+        db = new DatabaseHelper(this);
+        list = db.getAllStudent();
         //
 
 
@@ -93,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
             if(requestCode==0){
                 Bundle b = data.getExtras();
                 if(b!=null) {
-                    String uri = b.getString("imgdata");
+                    Uri uri = b.getParcelable("imgdata");
                     String txt = b.getString("textdata");
                     String course = b.getString("course");
-                    Uri img = Uri.parse(uri);
-                    list.add(new MyItem(img, txt,course));
+                    //String img = uri.toString();
+                    list.add(new MyItem(uri, txt,course));
                     slist.clear();
                     slist.addAll(list);
                     adapter.notifyDataSetChanged();
