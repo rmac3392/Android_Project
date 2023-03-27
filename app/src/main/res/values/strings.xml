@@ -8,4 +8,10 @@
         <item>BSCPE</item>
         <item>BSCE</item>
     </string-array>
+
+    <string-array name="contextmenu">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Call</item>
+    </string-array>
 </resources>

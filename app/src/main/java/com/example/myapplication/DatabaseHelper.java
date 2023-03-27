@@ -50,6 +50,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return ok;
     }
 
+    public int removeStudent(String name){
+        int result  = -1;
+        SQLiteDatabase db = getWritableDatabase();
+        result = db.delete(tblstudent,"studentname=?",new String[]{name});
+
+        return result;
+    }
+
     public ArrayList<MyItem> getAllStudent(){
         ArrayList<MyItem> list = new ArrayList<MyItem>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -62,8 +70,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
              String name = cursor.getString(cursor.getColumnIndexOrThrow("studentname"));
              String course = cursor.getString(cursor.getColumnIndexOrThrow("studentcourse"));
              list.add(new MyItem(Uri.parse(uriimage),name,course));
-             db.close();
+             cursor.moveToNext();
          }
+        cursor.moveToLast();
+        db.close();
+        cursor.close();
         return list;
     }
 }

@@ -1,5 +1,5 @@
 package com.example.myapplication;
-
+//17:11
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +12,14 @@ import android.os.PatternMatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<MyItem> list = new ArrayList<MyItem>();
     ArrayList<MyItem> slist = new ArrayList<MyItem>();
     ItemAdapter adapter;
+    AdapterView.AdapterContextMenuInfo info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +42,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         db = new DatabaseHelper(this);
         list = db.getAllStudent();
-        //
-
-
-        //
         adapter = new ItemAdapter(this,slist);
         lv = findViewById(R.id.listView1);
+
+        registerForContextMenu(lv);
+
         lv.setAdapter(adapter);
         txtSearch = findViewById(R.id.searchTxt);
         slist.addAll(list);
@@ -74,6 +78,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.contextmenu,menu);
+        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        menu.setHeaderTitle(list.get(info.position).getImgname());
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch(id){
+            case R.id.edit:
+
+                break;
+
+            case R.id.delete:
+                list.remove(info.position);
+                int ok = db.removeStudent(list.get(info.position).getImgname());
+                if(ok>0){
+                    Toast.makeText(this, "Student Removed", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(this, "Failed to remove student", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case R.id.call:
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.mymenu,menu);
         return super.onCreateOptionsMenu(menu);
@@ -89,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if(resultCode== Activity.RESULT_OK){
             if(requestCode==0){
                 Bundle b = data.getExtras();
