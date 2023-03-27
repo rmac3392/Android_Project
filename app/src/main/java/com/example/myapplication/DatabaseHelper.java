@@ -15,9 +15,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String databasename = "studentdb";
     public static final String tblstudent = "student";
-    public static final String  COL1= "ID";
-    public static final String  COL2= "student_name";
-    public static final String  COL3 = "student_image";
+
 
 
 
@@ -45,16 +43,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cv.put("studentimage",student.getUriImage().toString());
             cv.put("studentname",student.getImgname());
             cv.put("studentcourse",student.getCourseName());
-            db.insert(tblstudent,null,cv);
+            ok = db.insert(tblstudent,null,cv);
             db.close();
             return ok;
     }
 
-    public int removeStudent(String name){
+    public int removeStudent(int id){
         int result  = -1;
-        SQLiteDatabase db = getWritableDatabase();
-        result = db.delete(tblstudent,"studentname=?",new String[]{name});
-
+        SQLiteDatabase db = this.getWritableDatabase();
+        result = db.delete(tblstudent,"id=?",new String[]{id+""});
+        db.close();
         return result;
     }
 
@@ -69,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
              String uriimage = cursor.getString(cursor.getColumnIndexOrThrow("studentimage"));
              String name = cursor.getString(cursor.getColumnIndexOrThrow("studentname"));
              String course = cursor.getString(cursor.getColumnIndexOrThrow("studentcourse"));
-             list.add(new MyItem(Uri.parse(uriimage),name,course));
+             list.add(new MyItem(name,Uri.parse(uriimage),course,id));
              cursor.moveToNext();
          }
         cursor.moveToLast();

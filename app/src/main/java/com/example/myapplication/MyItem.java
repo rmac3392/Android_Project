@@ -12,18 +12,32 @@ public class MyItem implements Serializable {
     private int id;
     private String courseName;
 
-    public MyItem(int img, String imgname) {
-        this.img = img;
-        this.imgname = imgname;
-    }
 
-    public MyItem(Uri uriImage,String imgname,String courseName ) {
+
+    public MyItem( String imgname, Uri uriImage, String courseName, int id) {
         this.imgname = imgname;
         this.uriImage = uriImage;
+        this.id = id;
+        this.courseName = courseName;
+    }
+    public MyItem( String imgname, Uri uriImage, String courseName) {
+        this.imgname = imgname;
+        this.uriImage = uriImage;
+        this.id = id;
         this.courseName = courseName;
     }
 
+    public MyItem(){
+        super();
+    }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCourseName() {
         return courseName;

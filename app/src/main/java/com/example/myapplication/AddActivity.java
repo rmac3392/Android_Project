@@ -130,7 +130,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                     intent.getData();
                     setResult(Activity.RESULT_OK, intent);
                     String message = "Error adding student";
-                    long result = db.addStudent(new MyItem(uriImg,data,selected_course));
+                    long result = db.addStudent(new MyItem(data,uriImg,selected_course));
                     if(result>0){
                         message = "New Student added!";
                     }

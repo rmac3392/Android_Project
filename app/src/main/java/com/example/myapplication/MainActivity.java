@@ -1,5 +1,5 @@
 package com.example.myapplication;
-//17:11
+//28:11
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,8 +19,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 0; i < list.size();i++){
                     Matcher m = p.matcher(list.get(i).getImgname().toLowerCase());
                     if(m.find()){
-                        slist.add((list.get(i).getUriImage()==null)? new MyItem(list.get(i).getImg(),list.get(i).getImgname()):new MyItem(list.get(i).getUriImage(),list.get(i).getImgname(),list.get(i).getCourseName()));
+                        slist.add(new MyItem(list.get(i).getImgname(),list.get(i).getUriImage(),list.get(i).getCourseName()));
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -88,21 +85,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        int ok = -1;
         switch(id){
             case R.id.edit:
 
                 break;
-
             case R.id.delete:
-                list.remove(info.position);
-                int ok = db.removeStudent(list.get(info.position).getImgname());
-                if(ok>0){
-                    Toast.makeText(this, "Student Removed", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(this, "Failed to remove student", Toast.LENGTH_SHORT).show();
-                }
-                break;
+                slist.remove(info.position);
+                ok = db.removeStudent(list.get(info.position).getId());
+                    list.remove(info.position);
+                    Toast.makeText(this,(ok>0)? "Student Removed":"Failed to remove student", Toast.LENGTH_SHORT).show();
+                    this.adapter.notifyDataSetChanged();
+                    break;
 
             case R.id.call:
         }
@@ -133,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     String txt = b.getString("textdata");
                     String course = b.getString("course");
                     //String img = uri.toString();
-                    list.add(new MyItem(uri, txt,course));
+                    list.add(new MyItem(txt,uri,course));
                     slist.clear();
                     slist.addAll(list);
                     adapter.notifyDataSetChanged();
